@@ -4,15 +4,15 @@ import 'package:http/http.dart' as http ;
 import 'dart:async';
 import 'dart:convert';
 
-void main() => runApp(new Github());
+void main() => runApp( Github());
 
 class Github extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return  MaterialApp(
       title: 'Github Users',
-      theme: new ThemeData(
+      theme:  ThemeData(
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -23,7 +23,7 @@ class Github extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new GithubUsersList(title: 'Github users'),
+      home:  GithubUsersList(title: 'Github users'),
     );
   }
 }
@@ -43,7 +43,7 @@ class GithubUsersList extends StatefulWidget {
   final String title;
 
   @override
-  GithubUsersListState createState() => new GithubUsersListState();
+  GithubUsersListState createState() =>  GithubUsersListState();
 }
 
 class GithubUsersListState extends State<GithubUsersList> {
@@ -102,14 +102,54 @@ class GithubUsersListState extends State<GithubUsersList> {
           itemBuilder: (context, index) {
             return Card(
               elevation: 5.0,
-              child: new Column(
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(data[index]["avatar_url"]),
-                  ),
-                  Text(data[index]["login"])
-                ],
-              )
+              child:
+                   Column(
+                    children: <Widget>[
+                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                           Column(
+                            children: <Widget>[
+                               Container(
+                                margin: const EdgeInsets.all(16.0),
+                                child: CircleAvatar(
+                                  radius: 50.0,
+                                  backgroundImage: NetworkImage(
+                                      data[index]["avatar_url"]),
+                                ),
+                              ),
+                            ],
+                          ),
+                           Expanded(
+                            child:
+                            Container(
+                              padding: EdgeInsets.only(top: 16.0, left: 16.0),
+                              child:
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                     Padding( padding: EdgeInsets.only(bottom: 16.0)),
+                                     Text( data[index]["login"],
+                                        style: Theme.of(context).textTheme.title
+                                    ),
+                                     Padding( padding: EdgeInsets.only(bottom: 6.0)),
+                                     Text('Type : ' + data[index]["type"]),
+                                     Padding(padding: EdgeInsets.only(right: 15.0)),
+                                     Text('Score : ' + data[index]["score"].toString())
+                                  ],
+                                ),
+                            )
+                          ),
+                        ],
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(left: 6.0, bottom: 6.0),
+                        child: Text(data[index]["url"]),
+                      )
+                    ],
+                  )
+
             );
           }
       )
