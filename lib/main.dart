@@ -66,7 +66,7 @@ class GithubUsersListState extends State<GithubUsersList> {
   Future<String> getData() async {
     final response = await http.get(
         Uri.encodeFull("https://api.github.com/search/users?q=luis"),
-        headers: { "Accept" : "application/json" }
+        headers: { "Accept": "application/json"}
     );
 
     this.setState(() {
@@ -92,67 +92,77 @@ class GithubUsersListState extends State<GithubUsersList> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: ListView.builder(
-          itemCount: data != null ? data.length : 0,
-          itemBuilder: (context, index) {
-            return Card(
-              elevation: 5.0,
-              child:
-                   Column(
-                    children: <Widget>[
-                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                           Column(
-                            children: <Widget>[
-                               Container(
-                                margin: const EdgeInsets.all(16.0),
-                                child: CircleAvatar(
-                                  radius: 50.0,
-                                  backgroundImage: NetworkImage(
-                                      data[index]["avatar_url"]),
-                                ),
-                              ),
-                            ],
-                          ),
-                           Expanded(
-                            child:
-                            Container(
-                              padding: EdgeInsets.only(top: 16.0, left: 16.0),
+        body:
+        CustomScrollView(
+            scrollDirection: Axis.vertical,
+            slivers: <Widget>[
+              SliverAppBar(
+                expandedHeight: 180.0,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: const Text('Github Users'),
+                  background: Image.asset( "assets/coder.jpg", fit: BoxFit.cover),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(vertical: 2.0),
+                sliver: SliverFixedExtentList(
+                    itemExtent: 172.0,
+                    delegate: SliverChildBuilderDelegate(
+                          (builder, index) =>
+                            Card(
                               child:
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                     Padding( padding: EdgeInsets.only(bottom: 16.0)),
-                                     Text( data[index]["login"],
-                                        style: Theme.of(context).textTheme.title
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Column(
+                                          children: <Widget>[
+                                            Container(
+                                              margin: const EdgeInsets.all( 16.0),
+                                              child: CircleAvatar(
+                                                radius: 50.0,
+                                                backgroundImage: NetworkImage( data[index]["avatar_url"]),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Expanded(
+                                            child:
+                                            Container(
+                                              padding: EdgeInsets.only( top: 16.0, left: 16.0),
+                                              child:
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Padding( padding: EdgeInsets.only( bottom: 16.0)),
+                                                    Text(data[index]["login"], style: Theme.of(context).textTheme.title),
+                                                    Padding( padding: EdgeInsets.only( bottom: 6.0)),
+                                                    Text('Type : ' + data[index]["type"]),
+                                                    Padding( padding: EdgeInsets.only( right: 15.0)),
+                                                    Text('Score : ' + data[index]["score"].toString())
+                                                  ],
+                                                ),
+                                            )
+                                        ),
+                                      ],
                                     ),
-                                     Padding( padding: EdgeInsets.only(bottom: 6.0)),
-                                     Text('Type : ' + data[index]["type"]),
-                                     Padding(padding: EdgeInsets.only(right: 15.0)),
-                                     Text('Score : ' + data[index]["score"].toString())
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: EdgeInsets.only( left: 6.0, bottom: 6.0),
+                                      child: Text(data[index]["url"]),
+                                    )
                                   ],
-                                ),
-                            )
-                          ),
-                        ],
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.only(left: 6.0, bottom: 6.0),
-                        child: Text(data[index]["url"]),
-                      )
-                    ],
-                  )
+                                )
 
-            );
-          }
-      )
+                            ),
+                        childCount: data != null ? data.length : 0
+                    )
+                ),
+              )
+            ]
+        )
     );
   }
 }
